@@ -20,21 +20,9 @@
         <ul class="link-list">
           <li
             class="link-item"
-            @click="hyperlinkTo('https://www.nkust.edu.tw/index.php')"
+            @click="navigateTo('/')"
           >
-            學校首頁
-          </li>
-          <li
-            class="link-item"
-            @click="hyperlinkTo('https://webap0.nkust.edu.tw/nkust/')"
-          >
-            校務系統
-          </li>
-          <li
-            class="link-item"
-            @click="navigateTo('/login')"
-          >
-            管理後臺
+            返回首頁
           </li>
         </ul>
       </div>
@@ -101,8 +89,6 @@
           v-for="(item, index) in navItems"
           :key="index"
           class="nav-item"
-          @mouseenter="openMenu(index)"
-          @mouseleave="closeMenu(index)"
           @click="navigateTo(item.route)"
           style="font-size: large; font-weight: bolder"
         >
@@ -132,83 +118,27 @@
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import FooterComponent from "./FooterComponent.vue";
+import FooterComponent from "../../layouts/FooterComponent.vue";
 
 // 使用 Vue Router 來進行導航
 const router = useRouter();
-
-const isSearching = ref(false); // 控制是否顯示搜尋輸入框
-const query = ref(""); // 綁定輸入框內容
-
-// 導航項目，每個項目可以有下拉選單內容，並包含導航路徑
-const navItems = ref([
-  {
-    label: "單位介紹",
-    route: "/introduction",
-    subItems: [
-      { label: "關於本處", route: "/introduction/overview" },
-      { label: "組織架構", route: "/introduction/structure" },
-    ],
-  },
-  { label: "最新消息", 
-    route: "/news",
-    subItems: [
-      { label: "校區新貌", route: "/news/campusRenovation" },
-    ],
-  },
-  {
-    label: "業務職掌",
-    route: "/services",
-    subItems: [
-      { label: "處本部", route: "/services/headquarters" },
-      { label: "規劃評估組", route: "/services/plan" },
-      { label: "開發活化組", route: "/services/develop" },
-    ],
-  },
-  {
-    label: "主管法規",
-    route: "/regulations",
-    subItems: [
-      { label: "財政部", route: "/regulations/mof" },
-      { label: "本校", route: "/regulations/agency" },
-    ],
-  },
-  { label: "表單下載", route: "/downloads" },
-  { label: "相關連結", route: "/links" },
-  { label: "聯絡我們", route: "/contact" },
-]);
-
-// 響應式狀態
 const isSmallScreen = ref(false);
 const isMenuOpen = ref(false);
-const menuButtonReady = ref(false); // 确保菜单按钮已初始化
-// 方法
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value;
+const menus = ref([]);
 
-  console.log(isMenuOpen.value);
-};
-
-// 控制每個下拉選單是否顯示
-const menus = ref(Array(navItems.value.length).fill(false));
-
-let closeTimeout = null;
-
-const openMenu = (index) => {
-  menus.value = menus.value.map((_, i) => i === index); // 打開當前選單，關閉其他選單
-};
-
-const closeMenu = (index) => {
-  menus.value[index] = false; // 關閉當前選單
-};
-
-// 讓下拉選單在鼠標懸停時保持顯示
-const keepMenuOpen = (index) => {
-  clearTimeout(closeTimeout); // 當滑鼠進入時清除關閉延遲
-  menus.value[index] = true;
-};
+// 導航項目
+const navItems = [
+  {
+    label: '最新消息管理',
+    route: '/dashboard/news'
+  },
+  {
+    label: '跑馬燈管理',
+    route: '/dashboard/marqueeAds'
+  }
+];
 
 // 導航至指定路徑
 const navigateTo = (route) => {
@@ -219,38 +149,30 @@ const navigateTo = (route) => {
   }
 };
 
+// 開啟外部連結
 const hyperlinkTo = (url) => {
-  window.open(url, "_blank");
+  window.open(url, '_blank');
 };
 
-// 切換搜尋輸入框顯示
-const toggleSearch = () => {
-  isSearching.value = !isSearching.value;
-  if (!isSearching.value) {
-    query.value = ""; // 清空輸入框
-  }
+// 開啟下拉選單
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
 };
 
-// 搜尋並導向 /search 頁面
-const search = () => {
-  if (query.value.trim() !== "") {
-    router.push({ name: "search", query: { q: query.value } });
-  }
-};
-
-// 檢測螢幕尺寸
+// 監聽螢幕寬度變化
 const checkScreenSize = () => {
-  isSmallScreen.value = window.innerWidth <= 768;
+  isSmallScreen.value = window.innerWidth < 768;
 };
 
+// 生命週期
 onMounted(() => {
   checkScreenSize();
-  window.addEventListener("resize", checkScreenSize);
+  window.addEventListener('resize', checkScreenSize);
+});
 
-  // 确保 menuButton 初始化完成
-  nextTick(() => {
-    menuButtonReady.value = true;
-  });
+// 卸載時移除事件監聽器
+onUnmounted(() => {
+  window.removeEventListener('resize', checkScreenSize);
 });
 </script>
 
@@ -357,56 +279,10 @@ onMounted(() => {
   justify-content: center;
 }
 
-/* 手機模式樣式調整 */
-@media (max-width: 768px) {
-  .header-top,
-  .toolbar-container {
-    width: 100%; /* 設定寬度為 100% */
-    margin: 0; /* 移除左右外邊距 */
-    padding: 0; /* 移除內邊距，確保滿版 */
-  }
-
-  .menu-btn {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    position: relative;
-    cursor: pointer;
-  }
-}
-
-/* 下拉選單容器 */
-.dropdown-menu {
-  position: absolute;
-  top: 100%; /* 放置在導航項目的正下方 */
-  left: 0;
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加陰影 */
-  border-radius: 4px;
-  z-index: 100; /* 保證選單顯示在最上層 */
-  min-width: 100px; /* 設定最小寬度 */
-  padding: 10px 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
 .dropdown-menu ul {
   list-style: none; /* 移除圓點 */
   margin: 0 auto; /* 移除預設外邊距 */
   padding: 0; /* 移除預設內邊距 */
-}
-
-/* 下拉選單項目 */
-.dropdown-item {
-  font-size: 16px; /* 調整字體大小 */
-  font-weight: normal; /* 調整字體粗細，normal 表示不是粗體 */
-  padding: 8px 16px; /* 調整內邊距，確保文字有適當的留白 */
-  color: black; /* 字體顏色，保持清晰 */
-  transition: background-color 0.3s ease; /* 添加滑鼠懸停時的過渡效果 */
 }
 
 .dropdown-item:hover {

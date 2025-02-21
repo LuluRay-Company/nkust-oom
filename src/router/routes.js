@@ -26,6 +26,10 @@ const routes = [
         component: () => import("src/components/NewsDetailCompontent.vue"),
       },
       {
+        path: "news/campusRenovation",  // 校區新貌
+        component: () => import("src/pages/news/CampusRenovationPage.vue"),
+      },
+      {
         path: "links",
         component: () => import("src/pages/link/LinksPage.vue"),
       },
@@ -67,12 +71,29 @@ const routes = [
       },
     ],
   },
-
+  
+  /* 後台登入頁 */
   {
     path: "/login",
     component: () => import("src/pages/BackendManagement/loginPage.vue"),
   },
-
+  /* 後台管理     */
+  /* 最新消息管理 */
+  /* 跑馬燈管理   */
+  {
+    path: "/dashboard",
+    component: () => import("src/pages/BackendManagement/DashboardPage.vue"),
+    children: [
+      { 
+        path: "news", 
+        component: () => import("src/pages/BackendManagement/NewsMangementPage.vue") 
+      },
+      { 
+        path: "marqueeAds", 
+        component: () => import("src/pages/BackendManagement/MarqueeAdsMangmentPage.vue") 
+      },
+    ]
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

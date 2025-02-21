@@ -62,7 +62,7 @@ const password = ref("");
 const login = () => {
   if (username.value === "root" && password.value === "root") {
     // 假設登入成功，重定向到後台首頁
-    router.push("/admin/dashboard");
+    router.push("/dashboard");
   } else {
     alert("登入失敗，請檢查用戶名和密碼。");
   }
