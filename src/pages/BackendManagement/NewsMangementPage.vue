@@ -77,8 +77,10 @@
                 {{ item.content }}
               </q-tooltip>
             </div>
-            <div class="news-item">{{ item.isEnabled ? '是' : '否' }}</div>
-            <div class="news-item">{{ item.image }}</div>
+            <div class="news-item">
+              {{ formatIsEnabled(item.enable) }}
+            </div>
+            <div class="news-item">{{ item.imageUrl }}</div>
             <div class="news-item">{{ item.publishDate }}</div>
             <div class="news-item">{{ item.modifyDate }}</div>
             <div class="news-item action-buttons">
@@ -192,6 +194,23 @@ const handleEdit = (item) => {
 const handleDelete = (item) => {
   console.log('刪除項目:', item);
   // TODO: 實現刪除功能
+};
+
+const formatIsEnabled = (value) => {
+  // 檢查 value 是否為布林值
+  if (typeof value === 'boolean') {
+    return value ? '是' : '否';
+  }
+  // 如果是字符串，檢查是否為 'true' 或 'false'
+  if (typeof value === 'string') {
+    return value.toLowerCase() === 'true' ? '是' : '否';
+  }
+  // 如果是數字，0 為 false，非 0 為 true
+  if (typeof value === 'number') {
+    return value === 0 ? '否' : '是';
+  }
+  // 其他情況，包括 null 或 undefined
+  return '否';
 };
 
 // 無法透過:deep 設定 tooltip 的樣式，所以使用內聯樣式處理
