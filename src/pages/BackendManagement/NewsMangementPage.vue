@@ -47,6 +47,7 @@
             <div class="header-item">圖片</div>
             <div class="header-item">發布時間</div>
             <div class="header-item">更新時間</div>
+            <div class="header-item">操作</div>
           </div>
 
           <!-- 最新消息列表 -->
@@ -54,12 +55,54 @@
             <div class="news-item">{{ item.newsId }}</div>
             <div class="news-item">{{ item.categoryId }}</div>
             <div class="news-item">{{ item.author }}</div>
-            <div class="news-item">{{ item.title }}</div>
-            <div class="news-item">{{ item.content }}</div>
+            <div class="news-item ellipsis" >
+              {{ item.title }}
+              <q-tooltip
+                anchor="center middle"
+                self="center middle"
+                :offset="[10, 10]"
+                :style="tooltipStyle"
+              >
+                {{ item.title }}
+              </q-tooltip>
+            </div>
+            <div class="news-item ellipsis">
+              {{ item.content }}
+              <q-tooltip
+                anchor="center middle"
+                self="center middle"
+                :offset="[10, 10]"
+                :style="tooltipStyle"
+              >
+                {{ item.content }}
+              </q-tooltip>
+            </div>
             <div class="news-item">{{ item.isEnabled ? '是' : '否' }}</div>
             <div class="news-item">{{ item.image }}</div>
             <div class="news-item">{{ item.publishDate }}</div>
             <div class="news-item">{{ item.modifyDate }}</div>
+            <div class="news-item action-buttons">
+              <q-btn
+                flat
+                round
+                color="primary"
+                icon="edit"
+                size="sm"
+                @click="handleEdit(item)"
+              >
+                <q-tooltip>編輯</q-tooltip>
+              </q-btn>
+              <q-btn
+                flat
+                round
+                color="negative"
+                icon="delete"
+                size="sm"
+                @click="handleDelete(item)"
+              >
+                <q-tooltip>刪除</q-tooltip>
+              </q-btn>
+            </div>
           </div>
 
           <!-- 分頁控制器 -->
@@ -141,6 +184,29 @@ const handleAdd = () => {
   console.log('點擊新增按鈕');
 };
 
+const handleEdit = (item) => {
+  console.log('編輯項目:', item);
+  // TODO: 實現編輯功能
+};
+
+const handleDelete = (item) => {
+  console.log('刪除項目:', item);
+  // TODO: 實現刪除功能
+};
+
+// 無法透過:deep 設定 tooltip 的樣式，所以使用內聯樣式處理
+const tooltipStyle = {
+  width: '450px',     // 固定寬度
+  whiteSpace: 'normal',  // 允許文字換行
+  wordWrap: 'break-word',  // 允許文字換行
+  background: 'rgba(0, 0, 0, 0.8)',  // 設定背景色
+  color: 'white',  // 設定文字顏色
+  padding: '10px',  // 設定 padding
+  borderRadius: '8px',  // 設定圓角
+  fontSize: '14px',  // 調小字體大小
+  lineHeight: '1.4'  // 調整行高
+};
+
 </script>
 
 <style scoped>
@@ -198,7 +264,7 @@ const handleAdd = () => {
 
 .table-header {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   background-color: #ADADAD;
   font-weight: bold;
   border-bottom: 2px solid #ddd;
@@ -206,7 +272,7 @@ const handleAdd = () => {
 
 .news-row {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   border-bottom: 1px solid #ddd;
 }
 
@@ -226,15 +292,6 @@ const handleAdd = () => {
   background-color: #f5f5f5;
 }
 
-/* 響應式設計 */
-@media (max-width: 768px) {
-  .bg-grey-3 {
-    padding: 20px;
-    width: 100%;
-    margin: 0% auto;
-    height: 50px;
-  }
-}
 
 /* 分頁相關樣式 */
 .pagination-container {
@@ -251,4 +308,31 @@ const handleAdd = () => {
   color: #666;
   font-size: 14px;
 }
+
+.ellipsis {
+  position: relative; /* 設定相對定位 */
+  cursor: pointer;    /* 滑鼠移上去變成手型 */
+}
+
+.ellipsis:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* 當滑鼠懸停時改變背景色 (表格欄位) */
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .bg-grey-3 {
+    padding: 20px;
+    width: 100%;
+    margin: 0% auto;
+    height: 50px;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+}
 </style>
+
