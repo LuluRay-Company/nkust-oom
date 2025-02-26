@@ -83,14 +83,17 @@ const routes = [
   {
     path: "/dashboard",
     component: () => import("src/pages/BackendManagement/DashboardPage.vue"),
+    meta: { requiresAuth: true },
     children: [
       { 
         path: "news", 
-        component: () => import("src/pages/BackendManagement/NewsMangementPage.vue") 
+        component: () => import("src/pages/BackendManagement/NewsMangementPage.vue"),
+        meta: { requiresAuth: true }
       },
       { 
         path: "marqueeAds", 
-        component: () => import("src/pages/BackendManagement/MarqueeAdsMangmentPage.vue") 
+        component: () => import("src/pages/BackendManagement/MarqueeAdsMangmentPage.vue"),
+        meta: { requiresAuth: true }
       },
     ]
   },

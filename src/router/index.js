@@ -26,5 +26,27 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
+  // 添加全局路由管理
+  Router.beforeEach((to, from, next) => {
+    // 檢查路由是否需要認證
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      // 檢查用戶是否已登入
+      const userAccount = localStorage.getItem('userAccount')
+      if (!userAccount) {
+        // 未登入，重定向到登入頁面
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath }  // 保存原本要去的路徑
+        })
+      } else {
+        // 已登入，允許訪問
+        next()
+      }
+    } else {
+      // 不需要認證的路由，直接放行
+      next()
+    }
+  })
+
   return Router
 })

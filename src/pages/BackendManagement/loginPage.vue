@@ -50,21 +50,76 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useQuasar } from 'quasar';
 
 // 使用 Vue Router 來進行導航
 const router = useRouter();
+
+const $q = useQuasar();
 
 // 定義用戶名和密碼的響應式變量
 const username = ref("");
 const password = ref("");
 
-// 定義登入函數
-const login = () => {
-  if (username.value === "root" && password.value === "root") {
-    // 假設登入成功，重定向到後台首頁
-    router.push("/dashboard");
-  } else {
-    alert("登入失敗，請檢查用戶名和密碼。");
+// 登入函數
+const login = async () => {
+  try {
+    // 檢查必填欄位
+    if (!username.value || !password.value) {
+      $q.notify({
+        color: 'negative',
+        message: '請輸入帳號和密碼',
+        position: 'top',
+        timeout: 1500
+      });
+      return;
+    }
+
+    // 發送登入請求
+    const response = await fetch('http://localhost:8080/dashboardUsers/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        account: username.value, 
+        password: password.value
+      })
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      
+      // 儲存用戶資訊
+      localStorage.setItem('userAccount', data.account);
+      
+      // 登入成功通知
+      $q.notify({
+        color: 'positive',
+        message: '登入成功',
+        position: 'top',
+        timeout: 1500
+      });
+      
+      // 檢查是否有重定向路徑
+      const redirectPath = router.currentRoute.value.query.redirect || '/dashboard'
+      router.push(redirectPath)
+    } else if (response.status === 400) {
+      // 帳號或密碼錯誤
+      $q.notify({
+        color: 'negative',
+        message: '帳號或密碼錯誤',
+        position: 'top',
+        timeout: 1500
+      });
+    }
+  } catch (error) {
+    $q.notify({
+      color: 'negative',
+      message: '登入失敗，請稍後再試',
+      position: 'top',
+      timeout: 1500
+    });
   }
 };
 
