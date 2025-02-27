@@ -560,7 +560,6 @@ const handleDelete = (item) => {
         timeout: 1500
       });
     } catch (error) {
-      console.error('刪除操作失敗:', error);
       $q.notify({
         color: 'negative',
         message: '刪除失敗',
@@ -719,16 +718,6 @@ const getCategoryLabel = (value) => {
   background-color: rgba(0, 0, 0, 0.05); /* 當滑鼠懸停時改變背景色 (表格欄位) */
 }
 
-/* 響應式設計 */
-@media (max-width: 768px) {
-  .bg-grey-3 {
-    padding: 20px;
-    width: 100%;
-    margin: 0% auto;
-    height: 50px;
-  }
-}
-
 /* 操作按鈕 */
 .action-buttons {
   display: flex;
@@ -745,6 +734,16 @@ const getCategoryLabel = (value) => {
 
 .q-form {
   padding: 20px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .bg-grey-3 {
+    padding: 20px;
+    width: 100%;
+    margin: 0% auto;
+    height: 50px;
+  }
 }
 </style>
 
