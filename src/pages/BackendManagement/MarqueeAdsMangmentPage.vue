@@ -107,8 +107,13 @@
                   label="上傳圖片"
                   color="primary"
                   class="q-ml-sm"
-                  @click="handleImageUpload"
+                  @click="handleImageUpload('add')"
                 />
+              </div>
+              
+              <!-- 圖片預覽 -->
+              <div v-if="formData.imageUrl" class="image-preview">
+                <img :src="formData.imageUrl" alt="圖片預覽" />
               </div>
 
               <!-- 鏈結 -->
@@ -171,8 +176,13 @@
                   label="上傳圖片"
                   color="primary"
                   class="q-ml-sm"
-                  @click="handleImageUpload"
+                  @click="handleImageUpload('edit')"
                 />
+              </div>
+
+              <!-- 圖片預覽 -->
+              <div v-if="editFormData.imageUrl" class="image-preview">
+                <img :src="editFormData.imageUrl" alt="圖片預覽" />
               </div>
 
               <!-- 鏈結 -->
@@ -209,6 +219,15 @@
           </q-card-section>
         </q-card>
       </q-dialog>
+
+      <!-- 隱藏的檔案上傳輸入框 -->
+      <input 
+        type="file" 
+        ref="fileInput" 
+        style="display: none" 
+        accept="image/*" 
+        @change="onFileSelected" 
+      />
     </q-page>
   </q-page-container>
 </template> 
@@ -343,10 +362,205 @@ const resetForm = () => {
   };
 };
 
+// 檔案輸入
+const fileInput = ref(null);
+// 當前操作模式 (add 或 edit)
+const currentMode = ref(null);
+
 // 處理圖片上傳
-const handleImageUpload = () => {
-  // 這裡添加圖片上傳邏輯
-  console.log('上傳圖片');
+const handleImageUpload = (mode) => {
+  // 設置當前模式
+  currentMode.value = mode;
+  // 觸發檔案選擇器
+  fileInput.value.click();
+};
+
+// 處理檔案選擇
+const onFileSelected = async (event) => {
+  // 檢查事件和檔案是否存在
+  if (!event || !event.target || !event.target.files || !event.target.files[0]) {
+    console.error('未選擇檔案或檔案選擇事件無效');
+    try {
+      $q.notify({
+        color: 'negative',
+        message: '未選擇檔案或檔案選擇事件無效',
+        position: 'top',
+        timeout: 1500
+      });
+    } catch (e) {
+      console.error('通知顯示失敗:', e);
+      alert('未選擇檔案或檔案選擇事件無效');
+    }
+    return;
+  }
+
+  const file = event.target.files[0];
+  
+  // 使用本地變量來追蹤上傳狀態
+  let isUploading = true;
+  
+  // 使用 notify 來顯示上傳中的狀態，而不是使用 loading
+  let uploadingNotification = null;
+  try {
+    if ($q && $q.notify) {
+      uploadingNotification = $q.notify({
+        color: 'info',
+        message: '正在上傳圖片，請稍候...',
+        position: 'top',
+        timeout: 0 // 不自動關閉
+      });
+      console.log('上傳通知已顯示');
+    }
+  } catch (notifyError) {
+    console.error('顯示上傳通知時發生錯誤:', notifyError);
+  }
+
+  try {
+    // 輸出 $q 物件的狀態，幫助診斷問題
+    console.log('$q 物件狀態:', {
+      exists: !!$q,
+      hasLoading: $q && !!$q.loading,
+      hasNotify: $q && !!$q.notify,
+      hasDialog: $q && !!$q.dialog
+    });
+    
+    console.log('開始上傳圖片:', file.name, file.type, file.size);
+
+    // 建立 FormData
+    const uploadFormData = new FormData();
+    uploadFormData.append('image', file);
+    
+    console.log('FormData 已建立，參數名稱: image');
+
+    // 發送圖片上傳請求
+    console.log('開始發送上傳請求到:', 'http://localhost:8080/imgur/upload');
+    const response = await fetch('http://localhost:8080/imgur/upload', {
+      method: 'POST',
+      body: uploadFormData
+    });
+
+    console.log('上傳響應狀態:', response.status, response.statusText);
+    
+    // 獲取響應文本以便調試
+    const responseText = await response.text();
+    console.log('上傳響應內容:', responseText);
+    
+    // 嘗試解析 JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error('解析響應 JSON 失敗:', e);
+      throw new Error(`無法解析伺服器響應: ${responseText}`);
+    }
+
+    if (!response.ok) {
+      console.error('伺服器返回錯誤狀態碼:', response.status);
+      throw new Error(`伺服器錯誤 (${response.status}): ${data.message || responseText}`);
+    }
+
+    // 檢查返回的數據格式 - 後端返回格式為 {url: "圖片URL", success: true}
+    if (!data.url || !data.success) {
+      console.error('伺服器返回的數據格式不正確:', data);
+      throw new Error('伺服器返回的數據格式不正確');
+    }
+    
+    // 使用 url 字段
+    const imageUrl = data.url;
+    
+    // 更新對應表單的圖片 URL
+    if (currentMode.value === 'add') {
+      // 確保 formData.value 存在
+      if (!formData.value) {
+        console.warn('formData.value 不存在，重新初始化');
+        formData.value = {
+          imageUrl: '',
+          linkUrl: '',
+          displayOrder: '',
+          enable: true,
+          publishDate: '',
+          modifyDate: ''
+        };
+      }
+      formData.value.imageUrl = imageUrl;
+      console.log('已更新新增表單的圖片 URL:', imageUrl);
+    } else if (currentMode.value === 'edit') {
+      // 確保 editFormData.value 存在
+      if (!editFormData.value) {
+        console.warn('editFormData.value 不存在，重新初始化');
+        editFormData.value = {
+          adId: '',
+          imageUrl: '',
+          linkUrl: '',
+          displayOrder: '',
+          enable: true
+        };
+      }
+      editFormData.value.imageUrl = imageUrl;
+      console.log('已更新編輯表單的圖片 URL:', imageUrl);
+    } else {
+      console.warn('未知的操作模式:', currentMode.value);
+    }
+
+    // 顯示成功提示
+    try {
+      if ($q && $q.notify) {
+        $q.notify({
+          color: 'positive',
+          message: '圖片上傳成功',
+          position: 'top',
+          timeout: 1500
+        });
+        console.log('成功通知已顯示');
+      } else {
+        console.warn('無法顯示通知，$q.notify 不可用');
+        alert('圖片上傳成功');
+      }
+    } catch (notifyError) {
+      console.error('顯示成功通知時發生錯誤:', notifyError);
+      alert('圖片上傳成功');
+    }
+  } catch (error) {
+    console.error('圖片上傳失敗:', error);
+    
+    // 顯示詳細錯誤信息
+    try {
+      if ($q && $q.notify) {
+        $q.notify({
+          color: 'negative',
+          message: `圖片上傳失敗: ${error.message}`,
+          position: 'top',
+          timeout: 3000
+        });
+        console.log('錯誤通知已顯示');
+      } else {
+        console.warn('無法顯示通知，$q.notify 不可用');
+        alert(`圖片上傳失敗: ${error.message}`);
+      }
+    } catch (notifyError) {
+      console.error('顯示錯誤通知時發生錯誤:', notifyError);
+      alert(`圖片上傳失敗: ${error.message}`);
+    }
+  } finally {
+    // 標記上傳已完成
+    isUploading = false;
+    
+    // 關閉上傳中通知
+    if (uploadingNotification) {
+      try {
+        uploadingNotification();  // 在 Quasar 中，通知函數返回的是一個用於關閉通知的函數
+        console.log('上傳通知已關閉');
+      } catch (e) {
+        console.error('關閉上傳通知時發生錯誤:', e);
+      }
+    }
+    
+    // 重置檔案輸入以允許再次選擇相同檔案
+    if (event.target) {
+      event.target.value = null;
+      console.log('檔案輸入已重置');
+    }
+  }
 };
 
 // 控制編輯彈窗顯示
@@ -625,6 +839,22 @@ const tooltipStyle = {
 
 .q-form {
   padding: 20px;
+}
+
+/* 圖片預覽樣式 */
+.image-preview {
+  max-width: 100%;
+  margin-top: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
