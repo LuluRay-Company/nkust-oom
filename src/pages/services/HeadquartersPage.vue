@@ -114,7 +114,11 @@
             <div class="info-item">
               <div class="item-label"><p>代理人：</p></div>
               <div class="item-content">
-                <p>{{ info.agent }}</p>
+                <ul>
+                  <li v-for="(task, index) in info.agent" :key="index">
+                    {{ task }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -165,7 +169,7 @@ const anotherListData = reactive([
       "經營管理處各類專案之規劃與執行。",
       "其他行政支援及臨時交辦事項。",
     ],
-    agent: "1.蘇宸儀",
+    agent: ["1.蘇宸儀"],
   },
   {
     title: "蘇宸儀<br>約用助理員",
@@ -183,7 +187,22 @@ const anotherListData = reactive([
       "管理經營管理處兼任助理。",
       "其他行政支援及臨時交辦事項。",
     ],
-    agent: "1.賴杏雲",
+    agent: ["1.賴杏雲"],
+  },
+  {
+    title: "王君豪<br>專案經理",
+    image: "/img/people/wang.png",
+    phone: "(07)3617141 轉 22123",
+    email: "johnnycooky@nkust.edu.tw",
+    responsibility: [
+      "經營管理處各類專案之規劃與執行。",
+      "配合全校各單位業務彙整提報資料。",
+      "其他行政支援及臨時交辦事項。",
+    ],
+    agent:  [
+      "1.賴杏雲",
+      "2.吳永生",
+    ],
   },
 ]);
 
