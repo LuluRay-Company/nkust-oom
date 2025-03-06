@@ -410,7 +410,7 @@ const news = reactive([
     photo: "newszero.jpg",
     title:
       "【轉知】財政部113年版「主辦機關辦理有償BTO、BOT、ROT、OT案招商文件範本」及「民間自備私有土地B(R)OO案招商文件範本」，已登載於該部促進民間參與公共建設資訊網頁，轉請查照。",
-    date: "202/01/02",
+    date: "2025/01/02",
   },
   {
     id: 52,

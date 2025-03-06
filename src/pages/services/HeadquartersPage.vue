@@ -189,21 +189,6 @@ const anotherListData = reactive([
     ],
     agent: ["1.賴杏雲"],
   },
-  {
-    title: "王君豪<br>專案經理",
-    image: "/img/people/wang.png",
-    phone: "(07)3617141 轉 22123",
-    email: "johnnycooky@nkust.edu.tw",
-    responsibility: [
-      "經營管理處各類專案之規劃與執行。",
-      "配合全校各單位業務彙整提報資料。",
-      "其他行政支援及臨時交辦事項。",
-    ],
-    agent:  [
-      "1.賴杏雲",
-      "2.吳永生",
-    ],
-  },
 ]);
 
 // 導航至指定路徑

@@ -63,7 +63,11 @@
             <div class="info-item">
               <div class="item-label"><p>代理人：</p></div>
               <div class="item-content">
-                <p>{{ info.agent }}</p>
+                <ul>
+                  <li v-for="(task, index) in info.agent" :key="index">
+                    {{ task }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -123,15 +127,31 @@ const router = useRouter();
 
 // 定義關於本處的資料 (置頂的列表)
 const aboutInfo = reactive([
-  {
-    title: "待補<br>組長",
-    image: "/img/people/zero.jpg",
-    phone: "",
-    email: "",
-    position: "",
-    responsibility: "",
-    agent: "",
+  {   
+    title: "王君豪<br>專案經理",
+    image: "/img/people/wang.png",
+    phone: "(07)3617141 轉 22123",
+    email: "johnnycooky@nkust.edu.tw",
+    responsibility: [
+      "經營管理處各類專案之規劃與執行。",
+      "配合全校各單位業務彙整提報資料。",
+      "其他行政支援及臨時交辦事項。",
+    ],
+    agent:  [
+      "1.賴杏雲",
+      "2.吳永生",
+    ],
   },
+  
+  // {
+  //   title: "待補<br>組長",
+  //   image: "/img/people/zero.jpg",
+  //   phone: "",
+  //   email: "",
+  //   position: "",
+  //   responsibility: "",
+  //   agent: "",
+  // },
   // 可以添加更多的項目...
 ]);
 

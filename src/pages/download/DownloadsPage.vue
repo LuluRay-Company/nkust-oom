@@ -41,11 +41,11 @@ const router = useRouter();
 // 定義下載檔案資料
 const files = reactive([
   {
-    name: "112.02.18主辦機關辦理民間參與公共建設案件民間投資金額試算表",
-    url: "path/to/file1.pdf",
+    name: "主辦機關辦理民間參與公共建設案件民間投資金額試算表",
+    url: "https://ppp.mof.gov.tw/WWW/ref4.aspx?mid=8CDC76A1657676D2&oid=3EF82971BC6158C0",
   },
-  { name: "檔案下載2", url: "path/to/file2.pdf" },
-  { name: "檔案下載3", url: "path/to/file3.pdf" },
+  // { name: "檔案下載2", url: "path/to/file2.pdf" },
+  // { name: "檔案下載3", url: "path/to/file3.pdf" },
 ]);
 
 // 導航至指定路徑

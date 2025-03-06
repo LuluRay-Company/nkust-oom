@@ -14,10 +14,11 @@
     @mouseenter="autoplay = false"
     @mouseleave="autoplay = true"
   >
-    <q-carousel-slide v-for="(img, index) in images" :key="index" :name="index">
+    <q-carousel-slide v-for="(ad, index) in marqueeAds" :key="index" :name="index">
       <!-- 你可以在這裡添加圖片的描述或文字 -->
-      <img :src="img.src" class="custom-image" @click="showImage(img.src)" />
+      <img :src="ad.imageUrl" class="custom-image" @click="showImage(ad.imageUrl)" />
     </q-carousel-slide>
+    
   </q-carousel>
 
   <!-- 圖片全屏展示的彈窗 -->
@@ -35,21 +36,33 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
 const slide = ref(0); // 控制當前顯示的輪播圖片索引
 
 const autoplayInterval = ref(3000); // 自動播放間隔，單位為毫秒
 const autoplay = ref(true); // 是否啟動自動播放
 
-// 定義圖片列表
-const images = [
-  { src: "/img/carousel/first.jpg" },
-  { src: "/img/carousel/yanchao.jpg" },
-  { src: "/img/carousel/nanzih.jpg" },
-  { src: "/img/carousel/cijin.jpg" },
-  { src: "/img/carousel/jiangong.jpg" },
-];
+// 定義輪播廣告列表
+const marqueeAds = ref([]); 
+
+
+// 從 API 獲取輪播廣告資料
+const fetchMarqueeAds = async () => {
+  
+    const response = await axios.get('http://localhost:8080/marquee-ads');
+    // 過濾啟用的廣告
+    const enabledAds = response.data.filter(ad => ad.enable);
+    // 按照 displayOrder 排序
+    marqueeAds.value = enabledAds.sort((a, b) => a.displayOrder - b.displayOrder);
+    
+};
+
+// 在組件掛載時獲取資料
+onMounted(() => {
+  fetchMarqueeAds();
+});
 
 // 控制彈窗的顯示
 const dialogVisible = ref(false);
@@ -69,7 +82,9 @@ const showImage = (imageUrl) => {
   justify-content: center;
   width: 65%; /* 預設桌面模式寬度 */
   margin: auto;
+  position: relative;
 }
+
 .custom-image {
   width: 100%;
   height: 100%;

@@ -39,7 +39,7 @@ const router = useRouter();
 // 定義連結資料
 const links = reactive([
   {
-    name: "財政部促進民間參與公共資訊網",
+    name: "財政部促進民間參與公共建設資訊網",
     url: "https://ppp.mof.gov.tw/www/index.aspx",
   },
   { name: "Google", url: "https://www.google.com/" },
