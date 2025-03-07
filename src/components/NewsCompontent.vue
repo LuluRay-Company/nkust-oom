@@ -8,7 +8,7 @@
     <div class="news-list">
       <router-link
         :to="{
-          name: 'news-detail',
+          name: 'announcement/news-detail',
           params: { id: item.id },
           query: { page: currentPage },
         }"

@@ -9,6 +9,10 @@ const routes = [
         component: () => import("src/pages/download/DownloadsPage.vue"),
       },
       {
+        path: "introduction",
+        component: () => import("src/pages/introduction/IntroductionPage.vue"),
+      },
+      {
         path: "introduction/overview",
         component: () => import("src/pages/introduction/OverviewPage.vue"),
       },
@@ -17,16 +21,20 @@ const routes = [
         component: () => import("src/pages/introduction/StructurePage.vue"),
       },
       {
-        path: "news",
+        path: "announcement", // 最新公告
+        component: () => import("src/pages/news/AnnouncementPage.vue"),
+      },
+      {
+        path: "announcement/news", // 最新消息
         component: () => import("src/pages/news/NewsPage.vue"),
       },
       {
-        path: "news/news:id", // 動態新聞詳情頁面
-        name: "news-detail",
+        path: "announcement/news/news:id", // 動態新聞詳情頁面
+        name: "announcement/news-detail",
         component: () => import("src/components/NewsDetailCompontent.vue"),
       },
       {
-        path: "news/campusRenovation",  // 校區新貌
+        path: "announcement/campusRenovation",  // 校區新貌
         component: () => import("src/pages/news/CampusRenovationPage.vue"),
       },
       {
@@ -36,10 +44,6 @@ const routes = [
       {
         path: "contact",
         component: () => import("src/pages/contact/ContactPage.vue"),
-      },
-      {
-        path: "introduction",
-        component: () => import("src/pages/introduction/IntroductionPage.vue"),
       },
       {
         path: "regulations",

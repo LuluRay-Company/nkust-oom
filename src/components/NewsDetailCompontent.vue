@@ -6,7 +6,7 @@
         <span class="separator">/</span>
         <q-btn
           flat
-          @click="navigateTo('news')"
+          @click="navigateTo('announcement/news')"
           class="text-bold"
           label="最新消息"
         />

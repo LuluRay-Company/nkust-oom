@@ -6,7 +6,14 @@
         <span class="separator">/</span>
         <q-btn
           flat
-          @click="navigateTo('news')"
+          @click="navigateTo('announcement')"
+          class="text-bold"
+          label="最新公告"
+        />
+        <span class="separator">/</span>
+        <q-btn
+          flat
+          @click="navigateTo('announcement/news')"
           class="text-bold"
           label="最新消息"
         />
@@ -26,12 +33,12 @@ const router = useRouter();
 
 // 導航至指定路徑
 const navigateTo = (route) => {
-  if (route) {
-    router.push(route);
-  } else {
-    router.push("/");
-  }
-};
+    if (route) {
+      router.push(`/${route}`);
+    } else {
+      router.push("/");
+    }
+  };
 </script>
 
 <style scoped>

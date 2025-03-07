@@ -6,14 +6,14 @@
         <span class="separator">/</span>
         <q-btn
           flat
-          @click="navigateTo('news')"
+          @click="navigateTo('announcement')"
           class="text-bold"
-          label="最新消息"
+          label="最新公告"
         />
         <span class="separator">/</span>
         <q-btn
           flat
-          @click="navigateTo('news/campusRenovation')"
+          @click="navigateTo('announcement/campusRenovation')"
           class="text-bold"
           label="校區新貌"
         />

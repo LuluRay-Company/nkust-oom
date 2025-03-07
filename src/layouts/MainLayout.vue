@@ -152,10 +152,11 @@ const navItems = ref([
       { label: "組織架構", route: "/introduction/structure" },
     ],
   },
-  { label: "最新消息", 
-    route: "/news",
+  { label: "最新公告", 
+    route: "/announcement",
     subItems: [
-      { label: "校區新貌", route: "/news/campusRenovation" },
+      { label: "最新消息", route: "/announcement/news" },
+      { label: "校區新貌", route: "/announcement/campusRenovation" },
     ],
   },
   {
