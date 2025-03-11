@@ -97,6 +97,16 @@
               <q-btn
                 flat
                 round
+                color="info"
+                icon="upload_file"
+                size="sm"
+                @click="handleFileUpload(item)"
+              >
+                <q-tooltip>上傳文件</q-tooltip>
+              </q-btn>
+              <q-btn
+                flat
+                round
                 color="negative"
                 icon="delete"
                 size="sm"
@@ -302,6 +312,74 @@
         accept="image/*" 
         @change="onFileSelected" 
       />
+
+      <!-- 隱藏的文件上傳輸入框 -->
+      <input 
+        type="file" 
+        ref="documentInput" 
+        style="display: none" 
+        accept=".pdf,.odt" 
+        @change="onDocumentSelected" 
+      />
+
+      <!-- 文件上傳對話框 -->
+      <q-dialog v-model="showFileUploadDialog" persistent>
+        <q-card style="min-width: 500px; max-width: 50vw;">
+          <q-card-section class="row items-center q-pb-none">
+            <div class="text-h6">文件管理</div>
+            <q-space />
+            <q-btn icon="close" flat round dense v-close-popup />
+          </q-card-section>
+
+          <q-card-section class="q-pt-md">
+            <!-- 上傳新文件區域 -->
+            <div class="file-upload-section">
+              <div class="section-title">上傳新文件</div>
+              <div class="upload-button-container">
+                <q-btn 
+                  color="primary" 
+                  icon="upload_file" 
+                  label="選擇文件" 
+                  @click="triggerFileInput"
+                />
+                <div class="upload-info" v-if="selectedFileName">
+                  已選擇: {{ selectedFileName }}
+                </div>
+              </div>
+            </div>
+
+            <!-- 已上傳文件列表 -->
+            <div class="file-list-section q-mt-md">
+              <div class="section-title">已上傳文件</div>
+              
+              <div v-if="newsFiles.length === 0" class="no-files">
+                尚未上傳任何文件
+              </div>
+              
+              <q-list v-else bordered separator>
+                <q-item v-for="(file, index) in newsFiles" :key="index" class="file-item">
+                  <q-item-section avatar>
+                    <q-icon name="insert_drive_file" color="primary" size="md" />
+                  </q-item-section>
+                  
+                  <q-item-section>
+                    <q-item-label>{{ file.fileName }}</q-item-label>
+                    <q-item-label caption>{{ formatFileSize(file.fileSize) }} | {{ formatDate(file.uploadDate) }}</q-item-label>
+                  </q-item-section>
+                  
+                  <q-item-section side>
+                    <div class="row">
+                      <q-btn flat round color="negative" icon="delete" size="sm" @click="deleteFile(file)">
+                        <q-tooltip>刪除</q-tooltip>
+                      </q-btn>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
     </q-page>
   </q-page-container>
 </template>
@@ -453,8 +531,12 @@ const resetForm = () => {
 
 // 檔案輸入參考
 const fileInput = ref(null);
+// 文件輸入參考
+const documentInput = ref(null);
 // 當前操作模式 (add 或 edit)
 const currentMode = ref(null);
+// 當前選中的新聞項目 ID (用於文件上傳)
+const currentNewsId = ref(null);
 
 // 處理圖片上傳
 const handleImageUpload = (mode) => {
@@ -468,7 +550,6 @@ const handleImageUpload = (mode) => {
 const onFileSelected = async (event) => {
   // 檢查事件和檔案是否存在
   if (!event || !event.target || !event.target.files || !event.target.files[0]) {
-    console.error('未選擇檔案或檔案選擇事件無效');
     try {
       $q.notify({
         color: 'negative',
@@ -477,7 +558,6 @@ const onFileSelected = async (event) => {
         timeout: 1500
       });
     } catch (e) {
-      console.error('通知顯示失敗:', e);
       alert('未選擇檔案或檔案選擇事件無效');
     }
     return;
@@ -498,59 +578,40 @@ const onFileSelected = async (event) => {
         position: 'top',
         timeout: 0 // 不自動關閉
       });
-      console.log('上傳通知已顯示');
     }
   } catch (notifyError) {
-    console.error('顯示上傳通知時發生錯誤:', notifyError);
   }
 
   try {
-    // 輸出 $q 物件的狀態，幫助診斷問題
-    console.log('$q 物件狀態:', {
-      exists: !!$q,
-      hasLoading: $q && !!$q.loading,
-      hasNotify: $q && !!$q.notify,
-      hasDialog: $q && !!$q.dialog
-    });
-    
-    console.log('開始上傳圖片:', file.name, file.type, file.size);
 
     // 建立 FormData
     const uploadFormData = new FormData();
     uploadFormData.append('image', file);
     
-    console.log('FormData 已建立，參數名稱: image');
-
     // 發送圖片上傳請求
-    console.log('開始發送上傳請求到:', 'http://localhost:8080/imgur/upload');
     const response = await fetch('http://localhost:8080/imgur/upload', {
       method: 'POST',
       body: uploadFormData
     });
 
-    console.log('上傳響應狀態:', response.status, response.statusText);
-    
     // 獲取響應文本以便調試
     const responseText = await response.text();
-    console.log('上傳響應內容:', responseText);
+   
     
     // 嘗試解析 JSON
     let data;
     try {
       data = JSON.parse(responseText);
     } catch (e) {
-      console.error('解析響應 JSON 失敗:', e);
       throw new Error(`無法解析伺服器響應: ${responseText}`);
     }
 
     if (!response.ok) {
-      console.error('伺服器返回錯誤狀態碼:', response.status);
       throw new Error(`伺服器錯誤 (${response.status}): ${data.message || responseText}`);
     }
 
     // 檢查返回的數據格式 - 後端返回格式為 {url: "圖片URL", success: true}
     if (!data.url || !data.success) {
-      console.error('伺服器返回的數據格式不正確:', data);
       throw new Error('伺服器返回的數據格式不正確');
     }
     
@@ -561,7 +622,6 @@ const onFileSelected = async (event) => {
     if (currentMode.value === 'add') {
       // 確保 formData.value 存在
       if (!formData.value) {
-        console.warn('formData.value 不存在，重新初始化');
         formData.value = {
           title: '',
           categoryId: 0,  // 重置為數字 0，對應預設分類
@@ -572,11 +632,9 @@ const onFileSelected = async (event) => {
         };
       }
       formData.value.imageUrl = imageUrl;
-      console.log('已更新新增表單的圖片 URL:', imageUrl);
     } else if (currentMode.value === 'edit') {
       // 確保 editFormData.value 存在
       if (!editFormData.value) {
-        console.warn('editFormData.value 不存在，重新初始化');
         editFormData.value = {
           newsId: '',
           title: '',
@@ -588,9 +646,6 @@ const onFileSelected = async (event) => {
         };
       }
       editFormData.value.imageUrl = imageUrl;
-      console.log('已更新編輯表單的圖片 URL:', imageUrl);
-    } else {
-      console.warn('未知的操作模式:', currentMode.value);
     }
 
     // 顯示成功提示
@@ -602,17 +657,13 @@ const onFileSelected = async (event) => {
           position: 'top',
           timeout: 1500
         });
-        console.log('成功通知已顯示');
       } else {
-        console.warn('無法顯示通知，$q.notify 不可用');
         alert('圖片上傳成功');
       }
     } catch (notifyError) {
-      console.error('顯示成功通知時發生錯誤:', notifyError);
       alert('圖片上傳成功');
     }
   } catch (error) {
-    console.error('圖片上傳失敗:', error);
     
     // 顯示詳細錯誤信息
     try {
@@ -623,13 +674,10 @@ const onFileSelected = async (event) => {
           position: 'top',
           timeout: 3000
         });
-        console.log('錯誤通知已顯示');
       } else {
-        console.warn('無法顯示通知，$q.notify 不可用');
         alert(`圖片上傳失敗: ${error.message}`);
       }
     } catch (notifyError) {
-      console.error('顯示錯誤通知時發生錯誤:', notifyError);
       alert(`圖片上傳失敗: ${error.message}`);
     }
   } finally {
@@ -640,16 +688,13 @@ const onFileSelected = async (event) => {
     if (uploadingNotification) {
       try {
         uploadingNotification();  // 在 Quasar 中，通知函數返回的是一個用於關閉通知的函數
-        console.log('上傳通知已關閉');
       } catch (e) {
-        console.error('關閉上傳通知時發生錯誤:', e);
       }
     }
     
     // 重置檔案輸入以允許再次選擇相同檔案
     if (event.target) {
       event.target.value = null;
-      console.log('檔案輸入已重置');
     }
   }
 };
@@ -828,6 +873,296 @@ const getCategoryLabel = (value) => {
   return category ? category.label : '預設';
 };
 
+// 處理文件上傳
+const handleFileUpload = (item) => {
+  // 設置當前新聞 ID
+  currentNewsId.value = item.newsId;
+  // 獲取該新聞的文件列表
+  fetchNewsFiles(item.newsId);
+  // 打開文件上傳對話框
+  showFileUploadDialog.value = true;
+};
+
+// 獲取新聞相關文件
+const newsFiles = ref([]);
+const fetchNewsFiles = async (newsId) => {
+  try {
+    // 顯示加載中
+    let loadingNotification = null;
+    try {
+      if ($q && $q.notify) {
+        loadingNotification = $q.notify({
+          color: 'info',
+          message: '正在獲取文件列表...',
+          position: 'top',
+          timeout: 0 // 不自動關閉
+        });
+      }
+    } catch (notifyError) {}
+
+    // 發送請求獲取文件列表
+    const response = await fetch(`http://localhost:8080/files/news/${newsId}`);
+    
+    if (!response.ok) {
+      throw new Error(`獲取文件列表失敗: ${response.status}`);
+    }
+    
+    // 解析響應
+    const data = await response.json();
+    newsFiles.value = data || [];
+    
+    // 關閉加載中通知
+    if (loadingNotification) {
+      try {
+        loadingNotification();
+      } catch (e) {}
+    }
+  } catch (error) {
+    console.error('獲取文件列表失敗:', error);
+    try {
+      if ($q && $q.notify) {
+        $q.notify({
+          color: 'negative',
+          message: `獲取文件列表失敗: ${error.message}`,
+          position: 'top',
+          timeout: 3000
+        });
+      } else {
+        alert(`獲取文件列表失敗: ${error.message}`);
+      }
+    } catch (notifyError) {
+      alert(`獲取文件列表失敗: ${error.message}`);
+    }
+    
+    // 設置為空數組
+    newsFiles.value = [];
+  }
+};
+
+// 控制文件上傳對話框顯示
+const showFileUploadDialog = ref(false);
+
+// 選中的文件名
+const selectedFileName = ref('');
+
+// 觸發文件選擇
+const triggerFileInput = () => {
+  documentInput.value.click();
+};
+
+// 處理文件選擇
+const onDocumentSelected = async (event) => {
+  // 檢查事件和檔案是否存在
+  if (!event || !event.target || !event.target.files || !event.target.files[0]) {
+    try {
+      $q.notify({
+        color: 'negative',
+        message: '未選擇文件或文件選擇事件無效',
+        position: 'top',
+        timeout: 1500
+      });
+    } catch (e) {
+      alert('未選擇文件或文件選擇事件無效');
+    }
+    return;
+  }
+
+  const file = event.target.files[0];
+  selectedFileName.value = file.name;
+  
+  // 使用本地變量來追蹤上傳狀態
+  let isUploading = true;
+  
+  // 使用 notify 來顯示上傳中的狀態
+  let uploadingNotification = null;
+  try {
+    if ($q && $q.notify) {
+      uploadingNotification = $q.notify({
+        color: 'info',
+        message: '正在上傳文件，請稍候...',
+        position: 'top',
+        timeout: 0 // 不自動關閉
+      });
+    }
+  } catch (notifyError) {}
+
+  try {
+    // 建立 FormData
+    const uploadFormData = new FormData();
+    uploadFormData.append('file', file);
+    uploadFormData.append('newsId', currentNewsId.value);
+    
+    // 發送文件上傳請求
+    const response = await fetch('http://localhost:8080/files/upload', {
+      method: 'POST',
+      body: uploadFormData
+    });
+    
+    // 獲取響應文本以便調試
+    const responseText = await response.text();
+    
+    // 嘗試解析 JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      throw new Error(`無法解析伺服器響應: ${responseText}`);
+    }
+
+    if (!response.ok) {
+      throw new Error(`伺服器錯誤 (${response.status}): ${data.message || responseText}`);
+    }
+
+    // 上傳成功後重新獲取文件列表
+    await fetchNewsFiles(currentNewsId.value);
+    
+    // 清除選中的文件名
+    selectedFileName.value = '';
+
+    // 顯示成功提示
+    try {
+      if ($q && $q.notify) {
+        $q.notify({
+          color: 'positive',
+          message: '文件上傳成功',
+          position: 'top',
+          timeout: 1500
+        });
+      } else {
+        alert('文件上傳成功');
+      }
+    } catch (notifyError) {
+      alert('文件上傳成功');
+    }
+  } catch (error) {
+    console.error('文件上傳失敗:', error);
+    
+    // 顯示詳細錯誤信息
+    try {
+      if ($q && $q.notify) {
+        $q.notify({
+          color: 'negative',
+          message: `文件上傳失敗: ${error.message}`,
+          position: 'top',
+          timeout: 3000
+        });
+      } else {
+        alert(`文件上傳失敗: ${error.message}`);
+      }
+    } catch (notifyError) {
+      alert(`文件上傳失敗: ${error.message}`);
+    }
+  } finally {
+    // 標記上傳已完成
+    isUploading = false;
+    
+    // 關閉上傳中通知
+    if (uploadingNotification) {
+      try {
+        uploadingNotification();  // 在 Quasar 中，通知函數返回的是一個用於關閉通知的函數
+      } catch (e) {}
+    }
+    
+    // 重置檔案輸入以允許再次選擇相同檔案
+    if (event.target) {
+      event.target.value = null;
+    }
+  }
+};
+
+// 刪除文件
+const deleteFile = async (file) => {
+  $q.dialog({
+    title: '刪除確認',
+    message: `確定要刪除文件 "${file.fileName}" 嗎？`,
+    ok: {
+      label: '確定',
+      flat: true,
+      color: 'negative'
+    },
+    cancel: {
+      label: '取消',
+      flat: true,
+      color: 'grey'
+    },
+    persistent: true
+  }).onOk(async () => {
+    try {
+      // 顯示加載中
+      let loadingNotification = null;
+      try {
+        if ($q && $q.notify) {
+          loadingNotification = $q.notify({
+            color: 'info',
+            message: '正在刪除文件...',
+            position: 'top',
+            timeout: 0 // 不自動關閉
+          });
+        }
+      } catch (notifyError) {}
+
+      // 發送刪除請求
+      const response = await fetch(`http://localhost:8080/files/delete/${file.fileId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error(`刪除失敗: ${response.status}`);
+      }
+
+      // 刪除成功後重新獲取文件列表
+      await fetchNewsFiles(currentNewsId.value);
+
+      // 關閉加載中通知
+      if (loadingNotification) {
+        try {
+          loadingNotification();
+        } catch (e) {}
+      }
+
+      // 顯示成功提示
+      $q.notify({
+        color: 'positive',
+        message: '文件刪除成功',
+        position: 'top',
+        timeout: 1500
+      });
+    } catch (error) {
+      console.error('文件刪除失敗:', error);
+      $q.notify({
+        color: 'negative',
+        message: `文件刪除失敗: ${error.message}`,
+        position: 'top',
+        timeout: 3000
+      });
+    }
+  });
+};
+
+// 格式化文件大小
+const formatFileSize = (bytes) => {
+  if (!bytes || bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+// 格式化日期
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  
+  const date = new Date(dateString);
+  return date.toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
 </script>
 
 <style scoped>
@@ -957,16 +1292,6 @@ const getCategoryLabel = (value) => {
   padding: 20px;
 }
 
-/* 響應式設計 */
-@media (max-width: 768px) {
-  .bg-grey-3 {
-    padding: 20px;
-    width: 100%;
-    margin: 0% auto;
-    height: 50px;
-  }
-}
-
 /* 圖片預覽樣式 */
 .image-preview {
   max-width: 100%;
@@ -981,6 +1306,68 @@ const getCategoryLabel = (value) => {
   max-width: 100%;
   max-height: 200px;
   object-fit: contain;
+}
+
+/* 文件上傳框樣式 */
+.file-upload-section, .file-list-section {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #1976d2;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.upload-button-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.upload-info {
+  color: #666;
+  font-size: 14px;
+}
+
+.no-files {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+.file-item {
+  transition: background-color 0.2s ease;
+}
+
+.file-item:hover {
+  background-color: #f0f7ff;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .bg-grey-3 {
+    padding: 20px;
+    width: 100%;
+    margin: 0% auto;
+    height: 50px;
+  }
+  
+  .upload-button-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .upload-info {
+    margin-top: 8px;
+  }
 }
 </style>
 
