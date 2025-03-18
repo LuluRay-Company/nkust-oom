@@ -29,7 +29,8 @@
           <!-- 右邊方塊 - 校區新貌-->
           <div class="announcement-item">
             <q-icon name="info" color="grey" style="margin-right: 20px" />
-            <router-link to="/announcement/campusRenovation" class="announcement-link">校區新貌</router-link>
+            <router-link to="/announcement/" class="announcement-link">校區新貌 (Coming soon)</router-link>
+          <!-- <router-link to="/announcement/campusRenovation" class="announcement-link">校區新貌</router-link>  顯示校區新貌-->
           </div>
         </div>
       </q-page>

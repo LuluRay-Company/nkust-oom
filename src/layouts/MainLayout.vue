@@ -156,7 +156,7 @@ const navItems = ref([
     route: "/announcement",
     subItems: [
       { label: "最新消息", route: "/announcement/news" },
-      { label: "校區新貌", route: "/announcement/campusRenovation" },
+      { label: "校區新貌 (Coming soon)", route: "/announcement" }, // 顯示校區新貌 /campusRenovation
     ],
   },
   {

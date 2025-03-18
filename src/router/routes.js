@@ -33,10 +33,10 @@ const routes = [
         name: "announcement/news-detail",
         component: () => import("src/components/NewsDetailCompontent.vue"),
       },
-      {
-        path: "announcement/campusRenovation",  // 校區新貌
-        component: () => import("src/pages/news/CampusRenovationPage.vue"),
-      },
+      // {
+      //   path: "announcement/campusRenovation",  // 校區新貌
+      //   component: () => import("src/pages/news/CampusRenovationPage.vue"),
+      // },
       {
         path: "links",
         component: () => import("src/pages/link/LinksPage.vue"),
