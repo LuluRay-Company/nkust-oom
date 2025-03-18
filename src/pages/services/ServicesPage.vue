@@ -51,7 +51,7 @@ const router = useRouter();
 // 導航至指定路徑
 const navigateTo = (route) => {
   if (route) {
-    router.push(route);
+    router.push(`/${route}`);
   } else {
     router.push("/");
   }
