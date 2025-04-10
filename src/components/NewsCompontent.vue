@@ -65,7 +65,7 @@ const news = ref([]);
 // 添加獲取新聞數據的方法
 const fetchNews = async () => {
   try {
-    const response = await fetch('http://localhost:8080/news');
+    const response = await fetch('/api/news');
     if (!response.ok) {
       throw new Error('網路回應不正常');
     }

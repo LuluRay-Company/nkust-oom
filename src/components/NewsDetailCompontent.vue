@@ -76,7 +76,7 @@ const getFileUrl = (fileName) => {
 // 獲取所有新聞數據
 const fetchNews = async () => {
   try {
-    const response = await fetch('http://localhost:8080/news');
+    const response = await fetch('/api/news');
     if (!response.ok) {
       throw new Error('網路回應不正常');
     }
@@ -107,7 +107,7 @@ const fetchNews = async () => {
 const fetchNewsFiles = async (newsId) => {
   try {
     console.log(`獲取新聞 ID ${newsId} 的文件`);
-    const response = await fetch(`http://localhost:8080/files/news/${newsId}`);
+    const response = await fetch(`/api/files/news/${newsId}`);
     if (!response.ok) {
       throw new Error(`獲取新聞ID ${newsId} 的文件失敗`);
     }

@@ -51,7 +51,7 @@ const marqueeAds = ref([]);
 // 從 API 獲取輪播廣告資料
 const fetchMarqueeAds = async () => {
   
-    const response = await axios.get('http://localhost:8080/marquee-ads');
+    const response = await axios.get('/api/marquee-ads');
     // 過濾啟用的廣告
     const enabledAds = response.data.filter(ad => ad.enable);
     // 按照 displayOrder 排序

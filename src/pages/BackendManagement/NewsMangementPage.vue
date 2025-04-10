@@ -428,7 +428,7 @@ const paginatedNews = computed(() => {
 
 // 在元件掛載時，從 API 獲取最新消息
 onMounted(async function() {
-  let response = await fetch('http://localhost:8080/news');
+  let response = await fetch('/api/news');
   let data = await response.json();
   news.value = data;
 });
@@ -439,7 +439,7 @@ const handlePageChange = (page) => {
 
 // 搜尋功能 (根據標題關鍵字)
 const handleSearch = async () => {
-  let response = await fetch(`http://localhost:8080/news?search=${searchText.value}`);
+  let response = await fetch(`/api/news?search=${searchText.value}`);
   let data = await response.json();
   news.value = data;
   currentPage.value = 1; // 搜尋時重置頁碼
@@ -483,7 +483,7 @@ const onSubmit = async () => {
       enable: formData.value.enable
     });
 
-    const response = await fetch('http://localhost:8080/news', {
+    const response = await fetch('/api/news', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -493,7 +493,7 @@ const onSubmit = async () => {
 
     if (response.ok) {
       // 提交成功後重新獲取數據
-      let newData = await fetch('http://localhost:8080/news');
+      let newData = await fetch('/api/news');
       news.value = await newData.json();
       
       // 關閉彈窗並重置表單
@@ -589,7 +589,7 @@ const onFileSelected = async (event) => {
     uploadFormData.append('image', file);
     
     // 發送圖片上傳請求
-    const response = await fetch('http://localhost:8080/imgur/upload', {
+    const response = await fetch('/api/imgur/upload', {
       method: 'POST',
       body: uploadFormData
     });
@@ -739,7 +739,7 @@ const onEditSubmit = async () => {
       enable: editFormData.value.enable
     });
 
-    const response = await fetch(`http://localhost:8080/news/${editFormData.value.newsId}`, {
+    const response = await fetch(`/api/news/${editFormData.value.newsId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -749,7 +749,7 @@ const onEditSubmit = async () => {
 
     if (response.ok) {
       // 更新成功後重新獲取數據
-      let newData = await fetch('http://localhost:8080/news');
+      let newData = await fetch('/api/news');
       news.value = await newData.json();
       
       // 關閉彈窗
@@ -804,7 +804,7 @@ const handleDelete = (item) => {
   }).onOk(async () => {
     try {
       // 發送刪除請求
-      const response = await fetch(`http://localhost:8080/news/${item.newsId}`, {
+      const response = await fetch(`/api/news/${item.newsId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -901,7 +901,7 @@ const fetchNewsFiles = async (newsId) => {
     } catch (notifyError) {}
 
     // 發送請求獲取文件列表
-    const response = await fetch(`http://localhost:8080/files/news/${newsId}`);
+    const response = await fetch(`/api/files/news/${newsId}`);
     
     if (!response.ok) {
       throw new Error(`獲取文件列表失敗: ${response.status}`);
@@ -993,7 +993,7 @@ const onDocumentSelected = async (event) => {
     uploadFormData.append('newsId', currentNewsId.value);
     
     // 發送文件上傳請求
-    const response = await fetch('http://localhost:8080/files/upload', {
+    const response = await fetch('/api/files/upload', {
       method: 'POST',
       body: uploadFormData
     });
@@ -1102,7 +1102,7 @@ const deleteFile = async (file) => {
       } catch (notifyError) {}
 
       // 發送刪除請求
-      const response = await fetch(`http://localhost:8080/files/delete/${file.fileId}`, {
+      const response = await fetch(`/api/files/delete/${file.fileId}`, {
         method: 'DELETE'
       });
 

@@ -76,7 +76,7 @@ const login = async () => {
     }
 
     // 發送登入請求
-    const response = await fetch('http://localhost:8080/dashboardUsers/login', {
+    const response = await fetch('/api/dashboardUsers/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
