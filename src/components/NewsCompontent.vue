@@ -70,13 +70,15 @@ const fetchNews = async () => {
       throw new Error('網路回應不正常');
     }
     const data = await response.json();
-    // 將API返回的數據映射到組件使用的格式
-    news.value = data.map(item => ({
-      id: item.newsId,
-      photo: item.imageUrl,
-      title: item.title,
-      date: new Date(item.publishDate).toLocaleDateString('zh-TW'),
-    }));
+    // 將API返回的數據映射到組件使用的格式，並過濾掉 enable 為 false 的項目
+    news.value = data
+      .filter(item => item.enable !== false) // 過濾掉 enable 為 false 的新聞
+      .map(item => ({
+        id: item.newsId,
+        photo: item.imageUrl,
+        title: item.title,
+        date: new Date(item.publishDate).toLocaleDateString('zh-TW'),
+      }));
   } catch (error) {
     console.error('獲取新聞數據失敗:', error);
   }

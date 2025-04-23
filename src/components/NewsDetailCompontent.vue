@@ -164,7 +164,7 @@ onMounted(() => {
   color: white;
   padding: 20px;
   border-radius: 10px;
-  text-align: center;
+  text-align: left;
   margin-bottom: 20px;
   margin-top: 2%;
   width: 100%;
@@ -174,11 +174,13 @@ onMounted(() => {
   font-weight: bold;
   font-size: 26px;
   margin-bottom: 2%;
+  padding-left: 5%;
 }
 
 .news-detail-title p {
   font-size: 22px;
   color: #ddd;
+  padding-left: 5%;
 }
 
 /* 內容區塊設計 */
