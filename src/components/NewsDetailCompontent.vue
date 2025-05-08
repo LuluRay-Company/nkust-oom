@@ -35,7 +35,12 @@
               style="margin-right: 15px"
               size="30px"
             />
-            <a :href="file.fileUrl" download>{{ file.fileName }}</a>
+            <a 
+              :href="`/api/files/download/${encodeURIComponent(file.fileName)}`"
+              :download="file.fileName"
+            >
+              {{ file.fileName }}
+            </a>
           </div>
         </div>
       </div>
