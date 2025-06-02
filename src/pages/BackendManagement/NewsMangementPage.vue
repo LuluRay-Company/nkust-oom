@@ -589,7 +589,7 @@ const onFileSelected = async (event) => {
     uploadFormData.append('image', file);
     
     // 發送圖片上傳請求
-    const response = await fetch('/api/imgur/upload', {
+    const response = await fetch('/api/imagekit/upload', {
       method: 'POST',
       body: uploadFormData
     });

@@ -433,8 +433,8 @@ const onFileSelected = async (event) => {
     console.log('FormData 已建立，參數名稱: image');
 
     // 發送圖片上傳請求
-    console.log('開始發送上傳請求到:', '/api/imgur/upload');
-    const response = await fetch('/api/imgur/upload', {
+    console.log('開始發送上傳請求到:', '/api/imagekit/upload');
+    const response = await fetch('/api/imagekit/upload', {
       method: 'POST',
       body: uploadFormData
     });
