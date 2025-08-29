@@ -19,13 +19,13 @@
         />
       </q-toolbar>
 
-      <!-- 關於本處 Title -->
+      <!-- 關於本中心 Title -->
       <div class="headquarters-title">
         <h4>規劃評估組</h4>
         <p>················</p>
       </div>
 
-      <!-- 關於本處內容（置頂列表） -->
+      <!-- 關於本中心內容（置頂列表） -->
       <div class="headquarters-list">
         <div
           class="headquarters-item"
@@ -125,7 +125,7 @@ import { useRouter } from "vue-router";
 // 使用 Vue Router 來進行導航
 const router = useRouter();
 
-// 定義關於本處的資料 (置頂的列表)
+// 定義關於本中心的資料 (置頂的列表)
 const aboutInfo = reactive([
   {   
     title: "王君豪<br>專案經理",
@@ -133,7 +133,7 @@ const aboutInfo = reactive([
     phone: "(07)3617141 轉 22123",
     email: "johnnycooky@nkust.edu.tw",
     responsibility: [
-      "經營管理處各類專案之規劃與執行。",
+      "經營管理中心各類專案之規劃與執行。",
       "配合全校各單位業務彙整提報資料。",
       "其他行政支援及臨時交辦事項。",
     ],

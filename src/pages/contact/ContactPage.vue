@@ -21,7 +21,7 @@
       <!-- 每個區塊一個卡片 -->
       <q-card class="q-ma-md q-pa-md card-container">
         <q-card-section>
-          <h5 class="main-title">國立高雄科技大學 經營管理處</h5>
+          <h5 class="main-title">國立高雄科技大學 經營管理中心</h5>
           <ul>
             <li>校區位置：楠梓校區 行政大樓三樓1309、1310</li>
             <li>地址：811213 高雄市楠梓區海專路142號</li>

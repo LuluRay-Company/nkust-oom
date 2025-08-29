@@ -28,7 +28,7 @@
       <div class="org-chart">
         <div class="org-node">
           <div class="node-content">
-            <strong>經營管理處</strong>
+            <strong>經營管理中心</strong>
             <br />
             <small>Office of Operations and Management</small>
           </div>

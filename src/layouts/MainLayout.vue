@@ -148,7 +148,7 @@ const navItems = ref([
     label: "單位介紹",
     route: "/introduction",
     subItems: [
-      { label: "關於本處", route: "/introduction/overview" },
+      { label: "關於本中心", route: "/introduction/overview" },
       { label: "組織架構", route: "/introduction/structure" },
     ],
   },
@@ -163,7 +163,7 @@ const navItems = ref([
     label: "業務職掌",
     route: "/services",
     subItems: [
-      { label: "處本部", route: "/services/headquarters" },
+      { label: "中心本部", route: "/services/headquarters" },
       { label: "規劃評估組", route: "/services/plan" },
       { label: "開發活化組", route: "/services/develop" },
     ],

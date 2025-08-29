@@ -15,16 +15,16 @@
           flat
           @click="navigateTo('introduction/overview')"
           class="text-bold"
-          label="關於本處"
+          label="關於本中心"
         />
       </q-toolbar>
-      <!-- 關於本處 Title -->
+      <!-- 關於本中心 Title -->
       <div class="about-title">
-        <h4>關於本處</h4>
+        <h4>關於本中心</h4>
         <p>················</p>
       </div>
 
-      <!-- 關於本處內容 -->
+      <!-- 關於本中心內容 -->
       <div class="about-list">
         <div class="about-item" v-for="(info, index) in aboutInfo" :key="index">
           <p>{{ info.description }}</p>
@@ -41,9 +41,9 @@ import { useRouter } from "vue-router";
 // 使用 Vue Router 來進行導航
 const router = useRouter();
 
-// 定義關於本處的資料
+// 定義關於本中心的資料
 const aboutInfo = reactive([
-  { description: "「經營管理處」之核心權責與具體作為：" },
+  { description: "「經營管理中心」之核心權責與具體作為：" },
   { description: "1.　核心權責：協助提升本校的經營管理績效。" },
   {
     description:
@@ -96,7 +96,7 @@ const navigateTo = (route) => {
   align-items: center;
 }
 
-/* 關於本處區塊樣式 */
+/* 關於本中心區塊樣式 */
 .about-list {
   padding: 20px;
   background: linear-gradient(135deg, #f0f0f0, #ffffff); /* 添加漸變背景 */

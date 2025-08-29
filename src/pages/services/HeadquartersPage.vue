@@ -15,17 +15,17 @@
           flat
           @click="navigateTo('services/headquarters')"
           class="text-bold"
-          label="處本部"
+          label="中心本部"
         />
       </q-toolbar>
 
-      <!-- 關於本處 Title -->
+      <!-- 關於本中心 Title -->
       <div class="headquarters-title">
-        <h4>處本部</h4>
+        <h4>中心本部</h4>
         <p>················</p>
       </div>
 
-      <!-- 關於本處內容（置頂列表） -->
+      <!-- 關於本中心內容（置頂列表） -->
       <div class="headquarters-list">
         <div
           class="headquarters-item"
@@ -135,7 +135,7 @@ import { useRouter } from "vue-router";
 // 使用 Vue Router 來進行導航
 const router = useRouter();
 
-// 定義關於本處的資料 (置頂的列表)
+// 定義關於本中心的資料 (置頂的列表)
 const aboutInfo = reactive([
   {
     title: "高瑞鍾<br>處長",
@@ -143,12 +143,12 @@ const aboutInfo = reactive([
     phone: "(07)3617141 轉 23131、23470",
     email: "jckao@nkust.edu.tw",
     position: [
-      "國立高雄科技大學 經營管理處 處長",
+      "國立高雄科技大學 經營管理中心 處長",
       "國立高雄科技大學 教育事業暨產品推廣處 處長",
       "國立高雄科技大學 漁業科技與管理系 教授",
     ],
     education: "學經歷總表",
-    responsibility: "綜理 經營管理處 業務。",
+    responsibility: "綜理 經營管理中心 業務。",
   },
   // 可以添加更多的項目...
 ]);
@@ -162,11 +162,11 @@ const anotherListData = reactive([
     email: "xingyun@nkust.edu.tw",
     responsibility: [
       "處長行程安排及公文核稿。",
-      "彙整及召開處務會議。",
+      "彙整及召開中心會議。",
       "彙整各項工作報告（含專案）進度。",
       "彙整及管考年度計畫。",
       "彙整及提報業務績效報告資料。",
-      "經營管理處各類專案之規劃與執行。",
+      "經營管理中心各類專案之規劃與執行。",
       "其他行政支援及臨時交辦事項。",
     ],
     agent: ["1.蘇宸儀"],
@@ -180,11 +180,11 @@ const anotherListData = reactive([
       "公文分發及稽催。",
       "大事紀要、登革熱場域管理及自主管理填報窗口。",
       "網站管理及維護。",
-      "辦理處內財物盤點。",
-      "修訂經營管理處相關法規。",
-      "分配處內預算及執行控管。",
-      "管理處內物品及採購核銷。",
-      "管理經營管理處兼任助理。",
+      "辦理中心內財物盤點。",
+      "修訂經營管理中心相關法規。",
+      "分配中心內預算及執行控管。",
+      "管理中心內物品及採購核銷。",
+      "管理經營管理中心兼任助理。",
       "其他行政支援及臨時交辦事項。",
     ],
     agent: ["1.賴杏雲"],

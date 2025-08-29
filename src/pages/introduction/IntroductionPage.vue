@@ -20,10 +20,10 @@
 
       <!-- 兩個方塊區域 -->
       <div class="introduction-list">
-        <!-- 左邊方塊 - 關於本處 -->
+        <!-- 左邊方塊 - 關於本中心 -->
         <div class="introduction-item">
           <q-icon name="info" color="grey" style="margin-right: 20px" />
-          <a href="/introduction/overview">關於本處</a>
+          <a href="/introduction/overview">關於本中心</a>
         </div>
 
         <!-- 右邊方塊 - 組織架構 -->
