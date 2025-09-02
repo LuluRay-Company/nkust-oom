@@ -4,17 +4,12 @@
     <div class="header-top">
       <div class="logo-container" v-if="!isSmallScreen">
         <img
-          src="/img/nkust.png"
-          alt="NKUST Logo"
+          src="/img/nkust_oom.png"
+          alt="NKUST OOM Logo"
           class="logo"
           @click="hyperlinkTo('https://www.nkust.edu.tw/index.php')"
         />
-        <img
-          src="/img/oom.png"
-          alt="OOM Logo"
-          class="logo2"
-          @click="navigateTo()"
-        />
+
       </div>
       <div class="links-container" v-if="!isSmallScreen">
         <ul class="link-list">
@@ -48,17 +43,12 @@
       <!-- 手機模式下的 Logo -->
       <div class="logo-container mobile-logo" v-if="isSmallScreen">
         <img
-          src="/img/nkust.png"
-          alt="NKUST Logo"
+          src="/img/nkust_oom.png"
+          alt="NKUST OOM Logo"
           class="logo"
           @click="hyperlinkTo('https://www.nkust.edu.tw/index.php')"
         />
-        <img
-          src="/img/oom.png"
-          alt="OOM Logo"
-          class="logo2"
-          @click="navigateTo()"
-        />
+
       </div>
       <!-- Menu 按鈕 (小視窗) -->
       <q-btn
@@ -280,7 +270,7 @@ onMounted(() => {
 
 .logo {
   height: auto; /* 控制 logo 的大小 */
-  width: 40%;
+  width: 60%;
 }
 
 .logo2 {
