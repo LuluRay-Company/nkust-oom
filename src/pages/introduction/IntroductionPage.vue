@@ -26,10 +26,10 @@
           <a href="/introduction/overview">關於本中心</a>
         </div>
 
-        <!-- 右邊方塊 - 組織架構 -->
+        <!-- 右邊方塊 - 業務職掌 -->
         <div class="introduction-item">
           <q-icon name="account_tree" color="grey" style="margin-right: 20px" />
-          <a href="/introduction/structure">組織架構</a>
+          <a href="/introduction/structure">業務職掌</a>
         </div>
       </div>
     </q-page>

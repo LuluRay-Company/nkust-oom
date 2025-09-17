@@ -139,7 +139,7 @@ const navItems = ref([
     route: "/introduction",
     subItems: [
       { label: "關於本中心", route: "/introduction/overview" },
-      { label: "組織架構", route: "/introduction/structure" },
+      { label: "業務職掌", route: "/introduction/structure" },
     ],
   },
   { label: "最新公告", 
@@ -147,15 +147,6 @@ const navItems = ref([
     subItems: [
       { label: "最新消息", route: "/announcement/news" },
       { label: "校區新貌 (Coming soon)", route: "/announcement" }, // 顯示校區新貌 /campusRenovation
-    ],
-  },
-  {
-    label: "業務職掌",
-    route: "/services",
-    subItems: [
-      { label: "中心本部", route: "/services/headquarters" },
-      { label: "規劃評估組", route: "/services/plan" },
-      { label: "開發活化組", route: "/services/develop" },
     ],
   },
   {
