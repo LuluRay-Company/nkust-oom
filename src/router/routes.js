@@ -57,22 +57,6 @@ const routes = [
         path: "regulations/agency",
         component: () => import("src/pages/regulations/AgencyPage.vue"),
       },
-      {
-        path: "services",
-        component: () => import("src/pages/services/ServicesPage.vue"),
-      },
-      {
-        path: "services/headquarters",
-        component: () => import("src/pages/services/HeadquartersPage.vue"),
-      },
-      {
-        path: "services/plan",
-        component: () => import("src/pages/services/PlanPage.vue"),
-      },
-      {
-        path: "services/develop",
-        component: () => import("src/pages/services/DevelopPage.vue"),
-      },
     ],
   },
   

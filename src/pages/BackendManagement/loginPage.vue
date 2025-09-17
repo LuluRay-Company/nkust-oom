@@ -4,7 +4,7 @@
       <q-page class="login-container">
         <div class="login-box">
           <div class="login-header">
-            <h4>國立高雄科技大學經營管理處</h4>
+            <h4>國立高雄科技大學經營管理中心</h4>
             <h5>後臺管理登入</h5>
           </div>
           <!-- 縮短輸入框 -->
@@ -76,7 +76,7 @@ const login = async () => {
     }
 
     // 發送登入請求
-    const response = await fetch('http://localhost:8080/dashboardUsers/login', {
+    const response = await fetch('/api/dashboardUsers/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

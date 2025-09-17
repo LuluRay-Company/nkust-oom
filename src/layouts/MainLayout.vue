@@ -4,17 +4,12 @@
     <div class="header-top">
       <div class="logo-container" v-if="!isSmallScreen">
         <img
-          src="/img/nkust.png"
-          alt="NKUST Logo"
+          src="/img/nkust_oom.png"
+          alt="NKUST OOM Logo"
           class="logo"
           @click="hyperlinkTo('https://www.nkust.edu.tw/index.php')"
         />
-        <img
-          src="/img/oom.png"
-          alt="OOM Logo"
-          class="logo2"
-          @click="navigateTo()"
-        />
+
       </div>
       <div class="links-container" v-if="!isSmallScreen">
         <ul class="link-list">
@@ -48,17 +43,12 @@
       <!-- 手機模式下的 Logo -->
       <div class="logo-container mobile-logo" v-if="isSmallScreen">
         <img
-          src="/img/nkust.png"
-          alt="NKUST Logo"
+          src="/img/nkust_oom.png"
+          alt="NKUST OOM Logo"
           class="logo"
           @click="hyperlinkTo('https://www.nkust.edu.tw/index.php')"
         />
-        <img
-          src="/img/oom.png"
-          alt="OOM Logo"
-          class="logo2"
-          @click="navigateTo()"
-        />
+
       </div>
       <!-- Menu 按鈕 (小視窗) -->
       <q-btn
@@ -148,8 +138,8 @@ const navItems = ref([
     label: "單位介紹",
     route: "/introduction",
     subItems: [
-      { label: "關於本處", route: "/introduction/overview" },
-      { label: "組織架構", route: "/introduction/structure" },
+      { label: "關於本中心", route: "/introduction/overview" },
+      { label: "業務職掌", route: "/introduction/structure" },
     ],
   },
   { label: "最新公告", 
@@ -157,15 +147,6 @@ const navItems = ref([
     subItems: [
       { label: "最新消息", route: "/announcement/news" },
       { label: "校區新貌 (Coming soon)", route: "/announcement" }, // 顯示校區新貌 /campusRenovation
-    ],
-  },
-  {
-    label: "業務職掌",
-    route: "/services",
-    subItems: [
-      { label: "處本部", route: "/services/headquarters" },
-      { label: "規劃評估組", route: "/services/plan" },
-      { label: "開發活化組", route: "/services/develop" },
     ],
   },
   {
@@ -280,7 +261,7 @@ onMounted(() => {
 
 .logo {
   height: auto; /* 控制 logo 的大小 */
-  width: 40%;
+  width: 60%;
 }
 
 .logo2 {

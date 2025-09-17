@@ -278,7 +278,7 @@ const paginatedMarqueeAds = computed(() => {
 
 // 在元件掛載時，從 API 獲取跑馬燈
 onMounted(async function() {
-  let response = await fetch('http://localhost:8080/marquee-ads');
+  let response = await fetch('/api/marquee-ads');
   let data = await response.json();
   marqueeAds.value = data;
 });
@@ -316,7 +316,7 @@ const onSubmit = async () => {
       enable: formData.value.enable
     });
 
-    const response = await fetch('http://localhost:8080/marquee-ads', {
+    const response = await fetch('/api/marquee-ads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -326,7 +326,7 @@ const onSubmit = async () => {
 
     if (response.ok) {
       // 提交成功後重新獲取數據
-      let newData = await fetch('http://localhost:8080/marquee-ads');
+      let newData = await fetch('/api/marquee-ads');
       marqueeAds.value = await newData.json();
       
       // 關閉彈窗並重置表單
@@ -433,8 +433,8 @@ const onFileSelected = async (event) => {
     console.log('FormData 已建立，參數名稱: image');
 
     // 發送圖片上傳請求
-    console.log('開始發送上傳請求到:', 'http://localhost:8080/imgur/upload');
-    const response = await fetch('http://localhost:8080/imgur/upload', {
+    console.log('開始發送上傳請求到:', '/api/imagekit/upload');
+    const response = await fetch('/api/imagekit/upload', {
       method: 'POST',
       body: uploadFormData
     });
@@ -595,7 +595,7 @@ const onEditSubmit = async () => {
       enable: editFormData.value.enable
     });
 
-    const response = await fetch(`http://localhost:8080/marquee-ads/${editFormData.value.adId}`, {
+    const response = await fetch(`/api/marquee-ads/${editFormData.value.adId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -605,7 +605,7 @@ const onEditSubmit = async () => {
 
     if (response.ok) {
       // 更新成功後重新獲取數據
-      let newData = await fetch('http://localhost:8080/marquee-ads');
+      let newData = await fetch('/api/marquee-ads');
       marqueeAds.value = await newData.json();
       
       // 關閉彈窗
@@ -657,7 +657,7 @@ const handleDelete = (item) => {
   }).onOk(async () => {
     try {
       // 發送刪除請求
-      const response = await fetch(`http://localhost:8080/marquee-ads/${item.adId}`, {
+      const response = await fetch(`/api/marquee-ads/${item.adId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
